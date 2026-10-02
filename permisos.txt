@@ -1,0 +1,40 @@
+PROJECT_ID="mlops17-507623"
+SA="github-actions@mlops17-507623.iam.gserviceaccount.com"
+
+
+cat > custom_bq_role.json <<EOF
+{
+  "title": "terraform_bigquery_role",
+  "description": "Permisos mínimos para ejecutar Terraform sobre BigQuery",
+  "stage": "GA",
+  "includedPermissions": [
+    "bigquery.datasets.create",
+    "bigquery.tables.create",
+    "bigquery.tables.update",
+    "bigquery.tables.get",
+    "bigquery.tables.list",
+    "bigquery.routines.create",
+    "bigquery.routines.update",
+    "bigquery.routines.get",
+    "bigquery.routines.list",
+    "bigquery.jobs.create"
+  ]
+}
+EOF
+
+
+# Crear rol personalizado
+gcloud iam roles create terraform_bigquery_role \
+  --project $PROJECT_ID \
+  --file custom_bq_role.json
+
+
+
+# Asignar el rol personalizado a la service account
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member "serviceAccount:$SA" \
+  --role "projects/$PROJECT_ID/roles/terraform_bigquery_role"
+
+
+  GOOGLE_PROJECT
+  GOOGLE_APPLICATION_CREDENTIALS

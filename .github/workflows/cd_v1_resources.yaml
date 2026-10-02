@@ -1,0 +1,44 @@
+name: Deploy Terraform
+
+on:
+  workflow_dispatch:
+
+# on:
+#   push:
+#     branches:
+#       - 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v0 # Acción para configurar gcloud
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT }} # Especifica el proyecto GCP
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} # Clave de la cuenta de servicio
+          install_components: 'gke-gcloud-auth-plugin' # Instala el complemento para autenticar con GKE
+          export_default_credentials: true # Exporta las credenciales como predeterminadas para otros comandos
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8'
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.0.0
+
+      - name: Initialize Terraform
+        run: |
+          cd terraform_vertex
+          terraform init
+
+      - name: Apply Terraform
+        run: |
+          cd terraform_vertex
+          terraform apply -auto-approve

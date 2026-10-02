@@ -1,0 +1,9 @@
+CREATE OR REPLACE PROCEDURE `<project_id>.<dataset>.cencus_filter_by_age`(input_age INT64)
+BEGIN
+
+  INSERT INTO `<project_id>.<dataset>.census_by_age`
+  SELECT age, workclass, occupation
+  FROM `bigquery-public-data.ml_datasets.census_adult_income`
+  WHERE age < input_age;
+
+END;
