@@ -42,7 +42,7 @@ resource "google_bigquery_dataset_iam_binding" "dataset_access_editor" {
 
   role    = "roles/bigquery.dataEditor"
   members = [
-    "serviceAccount:<SA_VERTEX>"
+    "serviceAccount:mlops17-vertex-process@mlops17-507623.iam.gserviceaccount.com"
   ]
 }
 
@@ -53,7 +53,7 @@ resource "google_bigquery_dataset_iam_binding" "dataset_access_viewer" {
 
   role    = "roles/bigquery.dataViewer"
   members = [
-    "serviceAccount:<SA_VERTEX>"
+    "serviceAccount:mlops17-vertex-process@mlops17-507623.iam.gserviceaccount.com"
   ]
 }
 
@@ -65,7 +65,7 @@ resource "google_bigquery_routine" "cencus_filter_by_age" {
 
   definition_body = <<-SQL
     BEGIN
-      INSERT INTO `<PROJECT_ID>.<DATASET_ID>.census_by_age`
+      INSERT INTO `mlops17-507623.terraform_yeifer.census_by_age`
       SELECT age, workclass, occupation
       FROM `bigquery-public-data.ml_datasets.census_adult_income`
       WHERE age < input_age;
